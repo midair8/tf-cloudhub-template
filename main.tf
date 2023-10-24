@@ -18,6 +18,13 @@ resource "anypoint_env" "env" {
   type   = var.env_type
 }
 
+resource"time_sleep" "wait_1m" {
+  create_duration = "1m"
+  triggers = {
+    env_id = anypoint_env.env.id
+  } 
+}
+
 resource "anypoint_vpc" "vpc" {
   org_id     = var.org_id
   owner_id   = var.owner_id
@@ -42,6 +49,10 @@ resource "anypoint_vpc" "vpc" {
     protocol   = "tcp"
     to_port    = 8092
   }
+
+  depends_on = [
+    time_sleep.wait_1m
+  ]
 }
 
 resource "anypoint_dlb" "dlb" {
@@ -49,7 +60,7 @@ resource "anypoint_dlb" "dlb" {
   org_id       = var.org_id
   name         = var.dlb_name
   state        = var.dlb_state
-  ip_whitelist = var.dlb_ip_whitelist
+  // ip_whitelist = var.dlb_ip_whitelist
   http_mode    = var.dlb_http_mode
   tlsv1        = var.dlb_tlsv1
 
