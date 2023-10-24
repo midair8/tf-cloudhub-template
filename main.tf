@@ -45,9 +45,13 @@ resource "anypoint_vpc" "vpc" {
 }
 
 resource "anypoint_dlb" "dlb" {
-  vpc_id = anypoint_vpc.vpc.id
-  org_id = var.org_id
-  name   = var.dlb_name
+  vpc_id       = anypoint_vpc.vpc.id
+  org_id       = var.org_id
+  name         = var.dlb_name
+  state        = var.dlb_state
+  ip_whitelist = var.dlb_ip_whitelist
+  http_mode    = var.dlb_http_mode
+  tlsv1        = var.dlb_tlsv1
 
   ssl_endpoints {
     public_key_label = var.dlb_ssl_endpoints_public_key_label
